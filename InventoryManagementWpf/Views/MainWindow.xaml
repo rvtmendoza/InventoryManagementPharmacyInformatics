@@ -1,0 +1,407 @@
+﻿<Window
+    x:Class="InventoryManagementWpf.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:InventoryManagementWpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Inventory Management"
+    Width="1280"
+    Height="768"
+    Background="{StaticResource BackgroundColor}"
+    mc:Ignorable="d">
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="10">
+        <TabControl
+            Margin="0,20,0,0"
+            TabStripPlacement="Left">
+            <TabItem Header="Home" />
+
+            <TabItem
+                VerticalContentAlignment="Stretch"
+                Header="Sales">
+                <Grid Margin="10,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="Auto"
+                            MinWidth="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid
+                        Grid.Column="0"
+                        Margin="10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            Content="Item Search"
+                            Style="{StaticResource HeaderLabelStyle}" />
+
+                        <Border
+                            Grid.Row="1"
+                            Background="{StaticResource ControlBackgroundColor}"
+                            BorderThickness="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="15" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.Column="1">
+                                    <Label Content="Generic Name" />
+                                    <TextBox Text="{Binding GenericNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Brand Name" />
+                                    <TextBox Text="{Binding BrandNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Therapeutic Class" />
+                                    <ComboBox
+                                        DisplayMemberPath="TherapeuticClassName"
+                                        IsEditable="False"
+                                        IsTextSearchEnabled="True"
+                                        ItemsSource="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding TherapeuticClassSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Manufacturer" />
+                                    <TextBox Text="{Binding ManufacturerSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Barcode" />
+                                    <TextBox Text="{Binding BarcodeSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="100"
+                                    Margin="0,10"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding ItemSearchCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Content="Search" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid
+                        Grid.Column="1"
+                        Margin="10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            Content="Search Result"
+                            Style="{StaticResource HeaderLabelStyle}" />
+
+                        <ListView
+                            Grid.Row="1"
+                            ItemsSource="{Binding Items, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="0"
+                                        BorderBrush="DarkGray"
+                                        BorderThickness="1">
+                                        <Grid>
+                                            <Grid>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="15" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="15" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Margin="0"
+                                                        Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                    <Label
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Padding="5,2"
+                                                        Content="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.Column="3"
+                                                        Content="{Binding Stock, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        ContentStringFormat="#,0 units in stock" />
+                                                    <Label
+                                                        Grid.Row="1"
+                                                        Grid.Column="3"
+                                                        Content="{Binding Price, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        ContentStringFormat="&#x20B1; #,0.00" />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Inventory">
+                <Grid Margin="10,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="Auto"
+                            MinWidth="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid
+                        Grid.Column="0"
+                        Margin="10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Label
+                            Grid.Row="0"
+                            Content="Item Search"
+                            Style="{StaticResource HeaderLabelStyle}" />
+
+                        <Border
+                            Grid.Row="1"
+                            Background="{StaticResource ControlBackgroundColor}"
+                            BorderThickness="0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="15" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.Column="1">
+                                    <Label Content="Generic Name" />
+                                    <TextBox Text="{Binding GenericNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Brand Name" />
+                                    <TextBox Text="{Binding BrandNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Therapeutic Class" />
+                                    <ComboBox
+                                        DisplayMemberPath="TherapeuticClassName"
+                                        IsEditable="False"
+                                        IsTextSearchEnabled="True"
+                                        ItemsSource="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding TherapeuticClassSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Manufacturer" />
+                                    <TextBox Text="{Binding ManufacturerSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Label Content="Barcode" />
+                                    <TextBox Text="{Binding BarcodeSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+
+                                <Button
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="100"
+                                    Margin="0,10"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding ItemSearchCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Content="Search" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid
+                            Grid.Row="0"
+                            Margin="10,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Content="Search Result"
+                                Style="{StaticResource HeaderLabelStyle}" />
+
+                            <ListView
+                                Grid.Row="1"
+                                ItemsSource="{Binding Items, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="0"
+                                            BorderBrush="DarkGray"
+                                            BorderThickness="1">
+                                            <Grid>
+                                                <Grid>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="15" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="15" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Label
+                                                            Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            Margin="0"
+                                                            Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <Label
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Padding="5,2"
+                                                            Content="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                                        <Label
+                                                            Grid.Row="0"
+                                                            Grid.Column="3"
+                                                            Content="{Binding Stock, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="#,0 units in stock" />
+                                                        <Label
+                                                            Grid.Row="1"
+                                                            Grid.Column="3"
+                                                            Content="{Binding Price, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="&#x20B1; #,0.00" />
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+
+                        <Grid
+                            Grid.Row="1"
+                            Margin="10,10,10,2"
+                            Background="{StaticResource ControlBackgroundColor}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Content="Item Details"
+                                Style="{StaticResource HeaderLabelStyle}" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Item Name:" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Quantity:" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Batch Number:" />
+                            <Label
+                                Grid.Row="4"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Lot Number:" />
+                            <Label
+                                Grid.Row="5"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Manufacturing Date:" />
+                            <Label
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                HorizontalContentAlignment="Right"
+                                Content="Expiry Date:" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="0,2,5,2"
+                                Background="{StaticResource BackgroundColor}" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="0,2,5,2"
+                                BorderThickness="0" />
+                            <TextBox
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Margin="0,2,5,2"
+                                BorderThickness="0" />
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Margin="0,2,5,2"
+                                BorderThickness="0" />
+                            <DatePicker
+                                Grid.Row="5"
+                                Grid.Column="2" />
+                            <DatePicker
+                                Grid.Row="6"
+                                Grid.Column="2"
+                                Margin="0,2,0,4" />
+
+                            <Button
+                                Grid.Row="7"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Width="150"
+                                Margin="0,2,5,5"
+                                Content="Add to Inventory" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
