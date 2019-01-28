@@ -86,6 +86,15 @@
             <Setter Property="FontWeight" Value="Normal" />
         </Style>
 
+        <Style
+            x:Key="TextBlockStyle"
+            TargetType="TextBlock">
+            <Setter Property="Padding" Value="5,2" />
+            <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
             <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
@@ -420,7 +429,7 @@
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="Margin" Value="0,2" />
             <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
-            <Setter Property="Padding" Value="5,0" />
+            <Setter Property="Padding" Value="5,2" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="BorderThickness" Value="0" />

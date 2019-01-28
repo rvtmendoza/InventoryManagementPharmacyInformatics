@@ -5,11 +5,18 @@ namespace InventoryManagementLibrary
 {
     public class TherapeuticClassProcessor : ITherapeuticClassProcessor
     {
-        public async Task<IEnumerable<TherapeuticClassDbModel>> GetTherapeuticClass(string connectionString)
+        private readonly string _connectionString;
+
+        public TherapeuticClassProcessor(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        public async Task<IEnumerable<TherapeuticClassDbModel>> GetTherapeuticClass()
         {
             var query = "SELECT * FROM TherapeuticClass";
 
-            return await SqliteDataAccess.ExecuteQueryAsync<TherapeuticClassDbModel>(connectionString, query);
+            return await SqliteDataAccess.ExecuteQueryAsync<TherapeuticClassDbModel>(_connectionString, query);
         }
     }
 }

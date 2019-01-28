@@ -33,5 +33,13 @@ namespace InventoryManagementLibrary
                 return await connection.QueryAsync<T>(query);
             }
         }
+
+        public static async Task<int> ExecuteNonQueryAsync(string connectionString, string query)
+        {
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                return await connection.ExecuteAsync(query);
+            }
+        }
     }
 }

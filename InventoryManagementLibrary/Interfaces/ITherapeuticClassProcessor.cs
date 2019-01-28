@@ -5,6 +5,6 @@ namespace InventoryManagementLibrary
 {
     public interface ITherapeuticClassProcessor
     {
-        Task<IEnumerable<TherapeuticClassDbModel>> GetTherapeuticClass(string connectionString);
+        Task<IEnumerable<TherapeuticClassDbModel>> GetTherapeuticClass();
     }
 }
