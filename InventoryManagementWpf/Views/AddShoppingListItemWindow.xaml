@@ -1,0 +1,60 @@
+﻿<Window
+    x:Class="InventoryManagementWpf.AddShoppingListItemWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:InventoryManagementWpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Add to Shopping List"
+    Width="600"
+    Height="250"
+    Background="{StaticResource BackgroundColor}"
+    FontSize="15"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding ConfirmCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
+    </Window.InputBindings>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,10">
+            <Label Content="Item Name" />
+            <TextBox
+                Background="{StaticResource ButtonBackgroundColor}"
+                Focusable="False"
+                IsReadOnly="True"
+                Text="{Binding ItemName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Label Content="Quantity" />
+            <TextBox
+                Background="{StaticResource ButtonBackgroundColor}"
+                Text="{Binding DesiredQuantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Label
+                Content="{Binding Status, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                Foreground="#FFCD2323" />
+            <Button
+                Width="200"
+                Background="{StaticResource ButtonBackgroundHighlightColor}"
+                Command="{Binding ConfirmCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                Content="Confirm" />
+        </StackPanel>
+    </Grid>
+</Window>

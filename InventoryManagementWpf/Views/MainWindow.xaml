@@ -20,6 +20,7 @@
     <Window.Resources>
         <local:AddItemInventoryResultMessageConverter x:Key="AddItemInventoryResultMessageConverter" />
         <local:AddItemInventoryResultTextColorConverter x:Key="AddItemInventoryResultTextColorConverter" />
+        <local:AddItemToShoppingListVisibilityConverter x:Key="AddItemToShoppingListVisibilityConverter" />
     </Window.Resources>
 
     <Grid Margin="10">
@@ -33,34 +34,32 @@
                 Header="Sales">
                 <Grid Margin="10,2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="Auto"
-                            MinWidth="300" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid
-                        Grid.Column="0"
-                        Margin="10,0">
+                    <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
-                        <Label
+                        <Expander
                             Grid.Row="0"
-                            Content="Item Search"
-                            Style="{StaticResource HeaderLabelStyle}" />
-
-                        <Border
-                            Grid.Row="1"
-                            Background="{StaticResource ControlBackgroundColor}"
-                            BorderThickness="0">
-                            <Grid>
+                            Padding="4"
+                            Background="{StaticResource ButtonBackgroundColor}"
+                            BorderThickness="0"
+                            FontSize="14"
+                            Foreground="White"
+                            Header="Item Search"
+                            IsExpanded="True">
+                            <Grid Background="{StaticResource ControlBackgroundColor}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="15" />
+                                    <ColumnDefinition Width="10" />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -71,100 +70,246 @@
                                     Grid.Row="0"
                                     Grid.Column="1">
                                     <Label Content="Generic Name" />
-                                    <TextBox Text="{Binding GenericNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Text="{Binding SalesSearchGenericName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <Label Content="Brand Name" />
-                                    <TextBox Text="{Binding BrandNameSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Text="{Binding SalesSearchBrandName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <Label Content="Therapeutic Class" />
                                     <ComboBox
                                         DisplayMemberPath="TherapeuticClassName"
                                         IsEditable="False"
                                         IsTextSearchEnabled="True"
-                                        ItemsSource="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                        SelectedItem="{Binding TherapeuticClassSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        ItemsSource="{Binding AvailableTherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        SelectedItem="{Binding SalesSearchTherapeuticClass, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <Label Content="Manufacturer" />
-                                    <TextBox Text="{Binding ManufacturerSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Text="{Binding SalesSearchManufacturer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     <Label Content="Barcode" />
-                                    <TextBox Text="{Binding BarcodeSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBox Text="{Binding SalesSearchBarcode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
 
                                 <Button
                                     Grid.Row="1"
                                     Grid.Column="1"
                                     Width="100"
-                                    Margin="0,10"
+                                    Margin="0,4"
                                     HorizontalAlignment="Right"
-                                    Command="{Binding ItemSearchCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                    Command="{Binding SalesSearchCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
                                     Content="Search" />
                             </Grid>
-                        </Border>
-                    </Grid>
+                        </Expander>
 
-                    <Grid
-                        Grid.Column="1"
-                        Margin="10,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.Row="2"
+                            Background="{StaticResource ControlBackgroundColor}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                        <Label
-                            Grid.Row="0"
-                            Content="Search Result"
-                            Style="{StaticResource HeaderLabelStyle}" />
+                            <Label
+                                Grid.Row="0"
+                                Content="Search Result"
+                                Style="{StaticResource HeaderLabelStyle}" />
 
-                        <ListView
-                            Grid.Row="1"
-                            ItemsSource="{Binding InventoryItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedItem="{Binding InventorySelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Margin="0"
-                                        BorderBrush="DarkGray"
-                                        BorderThickness="1">
-                                        <Grid>
+                            <Button
+                                Grid.Row="0"
+                                Padding="10,0"
+                                Background="{StaticResource ButtonBackgroundHighlightColor}"
+                                Command="{Binding ShoppingListAddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Add Selected to List"
+                                Visibility="{Binding SalesSearchResultSelectedItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource AddItemToShoppingListVisibilityConverter}}" />
+
+                            <ListView
+                                Grid.Row="1"
+                                BorderBrush="{StaticResource ButtonBackgroundColor}"
+                                BorderThickness="0,0,0,2"
+                                ItemsSource="{Binding SalesSearchResults, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding SalesSearchResultSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectionMode="Single">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="0"
+                                            BorderBrush="DarkGray"
+                                            BorderThickness="1">
                                             <Grid>
                                                 <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="15" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="15" />
-                                                    </Grid.ColumnDefinitions>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="15" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="15" />
+                                                        </Grid.ColumnDefinitions>
 
-                                                    <Label
-                                                        Grid.Row="0"
-                                                        Grid.Column="1"
-                                                        Margin="0"
-                                                        Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                    <Label
-                                                        Grid.Row="1"
-                                                        Grid.Column="1"
-                                                        Padding="5,2"
-                                                        Content="{Binding TherapeuticClass, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <Label
+                                                            Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            Margin="0"
+                                                            Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            FontSize="17"
+                                                            FontWeight="SemiBold" />
+                                                        <Label
+                                                            Grid.Row="1"
+                                                            Grid.Column="1"
+                                                            Padding="5,0,5,1"
+                                                            VerticalContentAlignment="Center"
+                                                            Content="{Binding TherapeuticClassName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            FontSize="14" />
+                                                        <Label
+                                                            Grid.Row="2"
+                                                            Grid.Column="1"
+                                                            Padding="5,1,5,1"
+                                                            Content="{Binding InventoryModel.BatchNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="Batch No.: {0}"
+                                                            FontSize="13" />
+                                                        <Label
+                                                            Grid.Row="3"
+                                                            Grid.Column="1"
+                                                            Padding="5,1,5,4"
+                                                            Content="{Binding InventoryModel.LotNumber, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="Lot No.: {0}"
+                                                            FontSize="13" />
 
-                                                    <Label
-                                                        Grid.Row="0"
-                                                        Grid.Column="3"
-                                                        Content="{Binding Stock, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                        ContentStringFormat="#,0 units in stock" />
-                                                    <Label
-                                                        Grid.Row="1"
-                                                        Grid.Column="3"
-                                                        Content="{Binding Price, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                        ContentStringFormat="&#x20B1; #,0.00" />
+
+                                                        <Label
+                                                            Grid.Row="0"
+                                                            Grid.RowSpan="2"
+                                                            Grid.Column="3"
+                                                            HorizontalAlignment="Right"
+                                                            VerticalAlignment="Center"
+                                                            Content="{Binding InventoryModel.Quantity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="#,0 units in Quantity" />
+                                                        <Label
+                                                            Grid.Row="2"
+                                                            Grid.Column="3"
+                                                            Padding="5,1,5,1"
+                                                            HorizontalAlignment="Right"
+                                                            Content="{Binding InventoryModel.ManufacturingDate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="Mfg. Date: {0:MMM yyyy}"
+                                                            FontSize="13" />
+                                                        <Label
+                                                            Grid.Row="3"
+                                                            Grid.Column="3"
+                                                            Padding="5,1,5,1"
+                                                            HorizontalAlignment="Right"
+                                                            Content="{Binding InventoryModel.ExpiryDate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="Exp. Date: {0:MMM yyyy}"
+                                                            FontSize="13" />
+                                                    </Grid>
                                                 </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                BorderThickness="0"
+                                Content="Shopping List"
+                                Style="{StaticResource HeaderLabelStyle}" />
+                            <DataGrid
+                                Grid.Row="1"
+                                AutoGenerateColumns="False"
+                                HeadersVisibility="Column"
+                                IsReadOnly="True"
+                                ItemsSource="{Binding ShoppingList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                        ElementStyle="{StaticResource LeftAlignCell}"
+                                        Header="Product Name" />
+                                    <DataGridTextColumn
+                                        MinWidth="75"
+                                        Binding="{Binding Price, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N2}'}"
+                                        ElementStyle="{StaticResource RightAlignCell}"
+                                        Header="Price" />
+                                    <DataGridTextColumn
+                                        MinWidth="75"
+                                        Binding="{Binding InventoryModel.Quantity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N0}'}"
+                                        ElementStyle="{StaticResource RightAlignCell}"
+                                        Header="Quantity" />
+                                    <DataGridTextColumn
+                                        MinWidth="120"
+                                        Binding="{Binding SubTotal, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N2}'}"
+                                        ElementStyle="{StaticResource RightAlignCell}"
+                                        Header="Subtotal" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
+                        <Border
+                            Grid.Row="1"
+                            Margin="0,10"
+                            Background="{StaticResource ControlBackgroundColor}"
+                            BorderBrush="{StaticResource ButtonBackgroundColor}"
+                            BorderThickness="0,2">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="10,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Content="Total"
+                                    FontSize="18" />
+                                <Label
+                                    Grid.Column="1"
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    Content="{Binding TotalPrice, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                    ContentStringFormat="{}{0:N2}"
+                                    FontSize="18" />
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Grid.Column="0"
+                                Margin="0,5,2,0"
+                                Padding="5"
+                                HorizontalAlignment="Stretch"
+                                Background="#FFCD2323"
+                                Command="{Binding ShoppingListCancelCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Clear List" />
+                            <Button
+                                Grid.Column="1"
+                                Margin="2,5,0,0"
+                                Padding="5"
+                                HorizontalAlignment="Stretch"
+                                Background="{StaticResource ButtonBackgroundHighlightColor}"
+                                Command="{Binding ShoppingListConfirmCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                                Content="Confirm" />
+                        </Grid>
                     </Grid>
                 </Grid>
             </TabItem>
@@ -272,7 +417,7 @@
                             <ListView
                                 Grid.Row="1"
                                 Margin="0,0,0,5"
-                                ItemsSource="{Binding InventoryItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding InventorySearchResults, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                 SelectedItem="{Binding InventorySelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
@@ -301,11 +446,13 @@
                                                             Grid.Row="0"
                                                             Grid.Column="1"
                                                             Margin="0"
-                                                            Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            Content="{Binding DisplayName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            FontSize="17"
+                                                            FontWeight="SemiBold" />
                                                         <Label
                                                             Grid.Row="1"
                                                             Grid.Column="1"
-                                                            Padding="5,2,5,1"
+                                                            Padding="5,0,5,1"
                                                             VerticalContentAlignment="Center"
                                                             Content="{Binding TherapeuticClassName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                                             FontSize="14" />
@@ -331,21 +478,15 @@
                                                             Grid.Column="3"
                                                             HorizontalAlignment="Right"
                                                             VerticalAlignment="Center"
-                                                            Content="{Binding Stock, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            ContentStringFormat="#,0 units in stock" />
-                                                        <!--<Label
-                                                            Grid.Row="1"
-                                                            Grid.Column="3"
-                                                            HorizontalAlignment="Right"
-                                                            Content="{Binding Price, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            ContentStringFormat="&#x20B1; #,0.00" />-->
+                                                            Content="{Binding InventoryModel.Quantity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                            ContentStringFormat="#,0 units in Quantity" />
                                                         <Label
                                                             Grid.Row="2"
                                                             Grid.Column="3"
                                                             Padding="5,1,5,1"
                                                             HorizontalAlignment="Right"
                                                             Content="{Binding InventoryModel.ManufacturingDate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            ContentStringFormat="Mfg. Date: {0:dd MMM yyyy}"
+                                                            ContentStringFormat="Mfg. Date: {0:MMM yyyy}"
                                                             FontSize="13" />
                                                         <Label
                                                             Grid.Row="3"
@@ -353,7 +494,7 @@
                                                             Padding="5,1,5,1"
                                                             HorizontalAlignment="Right"
                                                             Content="{Binding InventoryModel.ExpiryDate, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            ContentStringFormat="Exp. Date: {0:dd MMM yyyy}"
+                                                            ContentStringFormat="Exp. Date: {0:MMM yyyy}"
                                                             FontSize="13" />
                                                     </Grid>
                                                 </Grid>
@@ -451,13 +592,13 @@
                                 Grid.Column="2"
                                 Margin="0,2,5,2"
                                 Style="{StaticResource TextBlockStyle}"
-                                Text="{Binding InventorySelectedItem.InventoryModel.ManufacturingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd MMM yyyy}}" />
+                                Text="{Binding InventorySelectedItem.InventoryModel.ManufacturingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:MMM yyyy}}" />
                             <TextBlock
                                 Grid.Row="6"
                                 Grid.Column="2"
                                 Margin="0,2,5,2"
                                 Style="{StaticResource TextBlockStyle}"
-                                Text="{Binding InventorySelectedItem.InventoryModel.ExpiryDate, Mode=TwoWay, StringFormat={}{0:dd MMM yyyy}, UpdateSourceTrigger=PropertyChanged}" />
+                                Text="{Binding InventorySelectedItem.InventoryModel.ExpiryDate, Mode=TwoWay, StringFormat={}{0:MMM yyyy}, UpdateSourceTrigger=PropertyChanged}" />
 
                             <StackPanel
                                 Grid.Row="7"

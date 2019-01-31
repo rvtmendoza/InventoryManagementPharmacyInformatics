@@ -339,7 +339,7 @@ namespace InventoryManagementWpf
         }
         #endregion
 
-        #region int : Quantity
+        #region int : DesiredQuantity
         private int _quantity;
 
         public int Quantity

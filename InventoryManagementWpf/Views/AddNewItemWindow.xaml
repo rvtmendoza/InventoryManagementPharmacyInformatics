@@ -7,9 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Add New Item"
     Width="500"
-    Height="830"
+    Height="760"
     Background="{StaticResource BackgroundColor}"
-    FontSize="15"
+    FontSize="13"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -17,6 +17,15 @@
         <local:AddItemInventoryResultMessageConverter x:Key="AddItemInventoryResultMessageConverter" />
         <local:AddItemInventoryResultTextColorConverter x:Key="AddItemInventoryResultTextColorConverter" />
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding AddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
+        <KeyBinding
+            Key="Escape"
+            Command="{Binding CancelAddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}" />
+    </Window.InputBindings>
 
     <Grid Background="{StaticResource ControlBackgroundColor}">
         <Grid.RowDefinitions>
@@ -57,9 +66,9 @@
             <Label Content="Lot Number" />
             <TextBox Text="{Binding LotNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Label Content="Manufacturing Date" />
-            <DatePicker SelectedDate="{Binding ManufacturingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd MMM yyyy}}" />
+            <DatePicker SelectedDate="{Binding ManufacturingDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:MMM yyyy}}" />
             <Label Content="Expiry Date" />
-            <DatePicker SelectedDate="{Binding ExpiryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:dd MMM yyyy}}" />
+            <DatePicker SelectedDate="{Binding ExpiryDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:MMM yyyy}}" />
             <Label Content="Quantity" />
             <TextBox Text="{Binding Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:N0}'}" />
             <Label Content="Unit Price" />
@@ -78,15 +87,15 @@
             <Button
                 Width="150"
                 Margin="5"
-                Background="{StaticResource ButtonBackgroundHighlightColor}"
-                Command="{Binding AddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
-                Content="Add Item" />
+                Background="#FFCD2323"
+                Command="{Binding CancelAddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                Content="Clear" />
             <Button
                 Width="150"
                 Margin="5,5,0,5"
-                Background="#FFCD2323"
-                Command="{Binding CancelAddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
-                Content="Cancel" />
+                Background="{StaticResource ButtonBackgroundHighlightColor}"
+                Command="{Binding AddItemCommand, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"
+                Content="Add Item" />
         </StackPanel>
     </Grid>
 </Window>

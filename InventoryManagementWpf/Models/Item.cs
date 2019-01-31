@@ -20,8 +20,8 @@ namespace InventoryManagementWpf
 
         public string TherapeuticClassName => TherapeuticClass.TherapeuticClassName;
 
-        public int Stock => InventoryModel.Quantity;
-
         public decimal Price => ((decimal)ItemModel.Price/100);
+
+        public decimal SubTotal => Price * InventoryModel.Quantity;
     }
 }
